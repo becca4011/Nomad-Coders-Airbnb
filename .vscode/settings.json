@@ -1,7 +1,8 @@
 {
     "python.pythonPath": "C:\\Users\\becca.DESKTOP-85UQBE3\\.virtualenvs\\Nomad-Coders-Django-WMn_VhJT\\Scripts\\python.exe",
-    "python.linting.enabled": true,
     "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
     "python.formatting.provider": "black",
     "python.linting.flake8Args": ["--max-line-lengh=88"]
 }
