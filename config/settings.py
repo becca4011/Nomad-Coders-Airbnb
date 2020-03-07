@@ -37,11 +37,15 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-]
+]  # django의 기본 application
+
+THIRD_PARTY_APPS = ["django_countries"]  # 다른 사람이 만든 application
 
 PROJECT_APPS = [
+    "core.apps.CoreConfig",
     "users.apps.UsersConfig",
-]
+    "rooms.apps.RoomsConfig",
+]  # 내가 사용하려는 application
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
 
@@ -119,5 +123,5 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"  # models에 avatar, gender, bio 등을 추가해서 user model을 바꿈
 

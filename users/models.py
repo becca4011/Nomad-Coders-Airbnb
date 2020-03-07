@@ -30,25 +30,19 @@ class User(AbstractUser):  # 상속
     CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_KRW, "KRU"))
 
     # 프로필 사진
-    avatar = models.ImageField(null=True, blank=True)
+    avatar = models.ImageField(blank=True)
     # 성별
-    gender = models.CharField(
-        choices=GENDER_CHOICES, max_length=10, null=True, blank=True
-    )
+    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
     # 소개
-    bio = models.TextField(default="", blank=True)
+    bio = models.TextField(blank=True)
     # 생일
-    birthday = models.DateField(null=True)
-    # 언어
-    langauge = models.CharField(
-        choices=LANGUAGE_CHOICES, max_length=2, null=True, blank=True
-    )
+    birthday = models.DateField(blank=True, null=True)  # 언어
+    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, blank=True)
     # 화폐(달러/원)
-    currency = models.CharField(
-        choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True
-    )
+    currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, blank=True)
     # superhost 여부(true/false)
     superhost = models.BooleanField(default=False)
 
     # default : 데이터베이스에 bio를 추가하면 필드가 모두 빈자리이므로 default값을 주어 해결
     # default값을 만들거나(default = ""), 비어있는 필드를 허용(null = True)
+
