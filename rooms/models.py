@@ -1,7 +1,6 @@
 from django.db import models  # django와 관련된 것들
 from django_countries.fields import CountryField  # 외부 패키지
 from core import models as core_models  # 내가 만든 패키지
-from users import models as user_models
 
 # Create your models here.
 
@@ -19,8 +18,52 @@ class AbstractItem(core_models.TimeStampedModel):
         return self.name
 
 
-class RoomType(AbstractItem):
-    pass
+class Photo(core_models.TimeStampedModel):
+
+    """ Photo Model Definition """
+
+    caption = models.CharField(max_length=80)
+    file = models.ImageField()
+    room = models.ForeignKey("Room", on_delete=models.CASCADE)
+    # ForeignKey : Room과 Photo를 연결
+    # on_delete=models.CASCADE : 방이 지워지면 사진도 같이 지워져야 하기 때문에 사용
+
+    def __str__(self):
+        return self.caption
+
+
+class RoomType(AbstractItem):  # 방 유형
+
+    """ RoomType Model Definition """
+
+    class Meta:
+        verbose_name = "Room Type"  # verbose_name : class 이름이 아닌 원하는 이름으로 바꿀 수 있음
+
+
+class Amenity(AbstractItem):  # 편의시설
+
+    """ Amenity Model Definition """
+
+    class Meta:
+        verbose_name_plural = (
+            "Amenities"  # verbose_name_plural : django는 class 이름에 s를 붙이는데, 그것을 방지
+        )
+
+
+class Facility(AbstractItem):  # 시설
+
+    """ Facility Model Definition """
+
+    class Meta:
+        verbose_name_plural = "Facilities"
+
+
+class HouseRule(AbstractItem):  # 규칙
+
+    """ HouseRule Model Definition """
+
+    class Meta:
+        verbose_name = "House Rule"
 
 
 class Room(core_models.TimeStampedModel):
@@ -43,12 +86,18 @@ class Room(core_models.TimeStampedModel):
     check_out = models.TimeField()  # 체크아웃
     instant_book = models.BooleanField(default=False)  # 즉시 예약
 
-    host = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
+    host = models.ForeignKey("users.User", on_delete=models.CASCADE)
     # room에서 host field와 user field(user의 id) 연결
     # ForeignKey : 한 모델을 다른 모델과 연결시킴
     # many-to-one(일대다 관계) : rooms는 한 명의 host를 가질 수 있음
+    # on_delete=models.CASCADE : User를 삭제하면 User가 등록한 Room도 삭제(cascade = 폭포수)
 
-    room_type = models.ManyToManyField(RoomType, blank=True)
+    room_type = models.ForeignKey("RoomType", on_delete=models.SET_NULL, null=True)
+    # 방 유형을 한 가지만 선택 가능하게 함
+
+    amenities = models.ManyToManyField("Amenity", blank=True)
+    facilities = models.ManyToManyField("Facility", blank=True)
+    house_rules = models.ManyToManyField("HouseRule", blank=True)
     # many-to-many(다대다 관계) : room type은 여러 개를 가질 수 있음
 
     def __str__(self):
