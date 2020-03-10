@@ -24,7 +24,7 @@ class Photo(core_models.TimeStampedModel):
 
     caption = models.CharField(max_length=80)
     file = models.ImageField()
-    room = models.ForeignKey("Room", on_delete=models.CASCADE)
+    room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
     # ForeignKey : Room과 Photo를 연결
     # on_delete=models.CASCADE : 방이 지워지면 사진도 같이 지워져야 하기 때문에 사용
 
@@ -86,18 +86,22 @@ class Room(core_models.TimeStampedModel):
     check_out = models.TimeField()  # 체크아웃
     instant_book = models.BooleanField(default=False)  # 즉시 예약
 
-    host = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    host = models.ForeignKey(
+        "users.User", related_name="rooms", on_delete=models.CASCADE
+    )
     # room에서 host field와 user field(user의 id) 연결
     # ForeignKey : 한 모델을 다른 모델과 연결시킴
     # many-to-one(일대다 관계) : rooms는 한 명의 host를 가질 수 있음
     # on_delete=models.CASCADE : User를 삭제하면 User가 등록한 Room도 삭제(cascade = 폭포수)
 
-    room_type = models.ForeignKey("RoomType", on_delete=models.SET_NULL, null=True)
+    room_type = models.ForeignKey(
+        "RoomType", related_name="rooms", on_delete=models.SET_NULL, null=True
+    )
     # 방 유형을 한 가지만 선택 가능하게 함
 
-    amenities = models.ManyToManyField("Amenity", blank=True)
-    facilities = models.ManyToManyField("Facility", blank=True)
-    house_rules = models.ManyToManyField("HouseRule", blank=True)
+    amenities = models.ManyToManyField("Amenity", related_name="rooms", blank=True)
+    facilities = models.ManyToManyField("Facility", related_name="rooms", blank=True)
+    house_rules = models.ManyToManyField("HouseRule", related_name="rooms", blank=True)
     # many-to-many(다대다 관계) : room type은 여러 개를 가질 수 있음
 
     def __str__(self):
