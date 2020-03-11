@@ -52,6 +52,7 @@ class RoomAdmin(admin.ModelAdmin):
         "instant_book",
         "count_amenities",
         "count_photos",
+        "total_rating",
     )
 
     # Rooms에서 객실을 filter해서 볼 수 있음
