@@ -23,7 +23,7 @@ class Photo(core_models.TimeStampedModel):
     """ Photo Model Definition """
 
     caption = models.CharField(max_length=80)
-    file = models.ImageField()
+    file = models.ImageField(upload_to="room_photos")  # 사진을 uploads의 room_photos에 저장
     room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
     # ForeignKey : Room과 Photo를 연결
     # on_delete=models.CASCADE : 방이 지워지면 사진도 같이 지워져야 하기 때문에 사용

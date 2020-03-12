@@ -29,8 +29,8 @@ class User(AbstractUser):  # 상속
 
     CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_KRW, "KRU"))
 
-    # 프로필 사진
-    avatar = models.ImageField(blank=True)
+    # 프로필 사진(사진을 uploads의 avatars 폴더에 저장)
+    avatar = models.ImageField(upload_to="avatars", blank=True)
     # 성별
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
     # 소개

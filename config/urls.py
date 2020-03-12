@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-]
+urlpatterns = [path("admin/", admin.site.urls)]
+
+# debug 모드에 있는지 체크
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # MEDIA_URL(/media/)을 MEDIA_ROOT(uploads 폴더)에 연결

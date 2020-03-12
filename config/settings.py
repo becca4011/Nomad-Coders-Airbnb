@@ -129,3 +129,6 @@ STATIC_URL = "/static/"
 
 AUTH_USER_MODEL = "users.User"  # models에 avatar, gender, bio 등을 추가해서 user model을 바꿈
 
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")  # 사진 폴더(uploads)
+
+MEDIA_URL = "/media/"  # uploads 폴더 안의 파일들을 다룸

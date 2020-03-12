@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
 from . import models
 
 # Register your models here.
@@ -15,10 +16,16 @@ class ItemAdmin(admin.ModelAdmin):
         return obj.rooms.count()
 
 
+class PhotoInline(admin.TabularInline):  # admin 안에 다른 admin을 넣는 것
+    model = models.Photo
+
+
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
 
     """ Room Admin Definition """
+
+    inlines = (PhotoInline,)
 
     fieldsets = (
         (
@@ -67,6 +74,8 @@ class RoomAdmin(admin.ModelAdmin):
         "country",
     )
 
+    raw_id_fields = ("host",)
+
     search_fields = ("=city", "^host__username")
     # = : 정확하게 검색해야 결과 보임
     # ^ : s, se, seo, seou, seoul 다 가능
@@ -87,6 +96,11 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(models.Photo)
 class PhotoAdmin(admin.ModelAdmin):
 
-    """  """
+    """ Photo Admin Definition """
 
-    pass
+    list_display = ("__str__", "get_thumbnail")
+
+    def get_thumbnail(self, obj):
+        return mark_safe(f'<img width="50px" src="{obj.file.url}" />')
+
+    get_thumbnail.short_description = "Thumbnail"
