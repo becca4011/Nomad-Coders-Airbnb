@@ -107,6 +107,10 @@ class Room(core_models.TimeStampedModel):
     def __str__(self):
         return self.name  # 방 이름을 보이게 함(Room object 대신)
 
+    def save(self, *args, **kwargs):
+        self.city = str.capitalize(self.city)  # 앞글자를 대문자로 바꿈
+        super().save(*args, **kwargs)  # 실제 save method 호출
+
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
