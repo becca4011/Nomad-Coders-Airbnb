@@ -39,7 +39,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]  # django의 기본 application
 
-THIRD_PARTY_APPS = ["django_countries"]  # 다른 사람이 만든 application
+THIRD_PARTY_APPS = ["django_countries", "django_seed"]  # 다른 사람이 만든 application
 
 PROJECT_APPS = [
     "core.apps.CoreConfig",
