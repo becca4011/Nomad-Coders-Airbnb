@@ -1,4 +1,5 @@
 from django.db import models  # django와 관련된 것들
+from django.urls import reverse
 from django_countries.fields import CountryField  # 외부 패키지
 from core import models as core_models  # 내가 만든 패키지
 
@@ -110,6 +111,11 @@ class Room(core_models.TimeStampedModel):
     def save(self, *args, **kwargs):
         self.city = str.capitalize(self.city)  # 앞글자를 대문자로 바꿈
         super().save(*args, **kwargs)  # 실제 save method 호출
+
+    def get_absolute_url(
+        self,
+    ):  # admin에서 만든 방이 웹사이트에서 어떻게 보이는지 확인할 수 있게 함(view on site 버튼)
+        return reverse("rooms:detail", kwargs={"pk": self.pk})
 
     def total_rating(self):
         all_reviews = self.reviews.all()

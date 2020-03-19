@@ -1,5 +1,5 @@
-from django.utils import timezone
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
+from django.shortcuts import render
 from . import models
 
 # Create your views here.
@@ -16,10 +16,15 @@ class HomeView(ListView):
     ordering = "created"  # 정렬방식
     context_object_name = "rooms"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        now = timezone.now()
-        context["now"] = now
+class RoomDetail(DetailView):
 
-        return context
+    """ RoomDetail Definition """
+
+    model = models.Room
+
+
+def search(request):
+    city = request.GET.get("city")
+    city = str.capitalize(city)
+    return render(request, "rooms/search.html", {"city": city})
