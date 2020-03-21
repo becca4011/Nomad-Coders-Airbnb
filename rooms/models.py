@@ -77,11 +77,11 @@ class Room(core_models.TimeStampedModel):
     city = models.CharField(max_length=80)  # 위치한 도시
     price = models.IntegerField()  # 가격
     address = models.CharField(max_length=140)
-    guests = models.IntegerField()  # 인원 수
+    guests = models.IntegerField(help_text="객실에 머무를 수 있는 총 인원 수를 적어주세요.")  # 인원 수
 
-    beds = models.IntegerField()  # 침대 수
-    bedrooms = models.IntegerField()  # 침실 수
-    baths = models.IntegerField()  # 화장실 수
+    beds = models.IntegerField(help_text="객실의 침대 수를 적어주세요.")  # 침대 수
+    bedrooms = models.IntegerField(help_text="객실의 침실 수를 적어주세요.")  # 침실 수
+    baths = models.IntegerField(help_text="객실의 화장실 수를 적어주세요.")  # 화장실 수
 
     check_in = models.TimeField()  # 체크인
     check_out = models.TimeField()  # 체크아웃
@@ -128,4 +128,3 @@ class Room(core_models.TimeStampedModel):
             return round(all_ratings / len(all_reviews), 2)
 
         return 0
-
