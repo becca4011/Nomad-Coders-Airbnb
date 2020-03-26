@@ -132,3 +132,12 @@ AUTH_USER_MODEL = "users.User"  # models에 avatar, gender, bio 등을 추가해
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")  # 사진 폴더(uploads)
 
 MEDIA_URL = "/media/"  # uploads 폴더 안의 파일들을 다룸
+
+
+# Email Configuration
+
+EMAIL_HOST = "smtp.mailgun.org"
+EMAIL_PORT = "587"
+EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
+EMAIL_FROM = "email@sandbox39f0a1b9131340dcabe1f328d9ac50e5.mailgun.org"
