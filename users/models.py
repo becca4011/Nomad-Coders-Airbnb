@@ -3,6 +3,8 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.mail import send_mail
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 
 # Create your models here.
 # model : 데이터가 보여지는 모습
@@ -63,12 +65,20 @@ class User(AbstractUser):  # 상속
             secret = uuid.uuid4().hex[:20]  # hex : 16진수, [:20] : 20자리 만큼 채우기
             self.email_secret = secret
 
+            html_message = render_to_string(
+                "emails/verify_email.html", {"secret": secret}
+            )
             send_mail(
                 "Verify Airbnb Account",
-                f"Verify account, this is your secret : {secret}",
+                strip_tags(
+                    html_message
+                ),  # html을 이메일로 보내기 위해 사용(없으면 <a href ...></a>가 다 보임)
                 settings.EMAIL_FROM,
-                [self.email,],
+                [self.email],
                 fail_silently=False,
+                html_message=html_message,
             )
+
+            self.save()
 
         return

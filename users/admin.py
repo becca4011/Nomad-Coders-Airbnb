@@ -41,6 +41,8 @@ class CustomUserAdmin(UserAdmin):
         "superhost",
         "is_staff",
         "is_superuser",
+        "email_verified",
+        "email_secret",
     )
 
     # list_display = ("username", "email", "gender", "language", "currency", "superhost") : user list에 보여질 것들
@@ -48,4 +50,3 @@ class CustomUserAdmin(UserAdmin):
 
     # fieldsets : admin 패널의 푸른색 구역(Personal info, Permissions, Important dates, Custom Profile)
     # UserAdmin.fieldsets : django에 있는 field
-
