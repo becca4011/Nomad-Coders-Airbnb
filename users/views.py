@@ -84,54 +84,75 @@ def github_login(request):
     )
 
 
+class GithubException(Exception):
+    pass
+
+
 def github_callback(request):
 
-    client_id = os.environ.get("GH_ID")
-    client_secret = os.environ.get("GH_SECRET")
+    try:
+        client_id = os.environ.get("GH_ID")
+        client_secret = os.environ.get("GH_SECRET")
 
-    code = request.GET.get("code")
+        code = request.GET.get("code")
 
-    if code is not None:
-        result = requests.post(
-            f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
-            headers={"Accept": "application/json"},
-        )
-        result_json = result.json()
-        error = result_json.get("error", None)
-
-        if error is not None:
-            return redirect(reverse("users:login"))  # 에러가 생기면 이곳으로 감
-        else:
-            access_token = result_json.get("access_token")
-            profile_request = requests.get(
-                "https://api.github.com/user",
-                headers={
-                    "Authorization": f"token {access_token}",
-                    "Accept": "application/json",
-                },
+        if code is not None:
+            token_request = requests.post(
+                f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
+                headers={"Accept": "application/json"},
             )
-            profile_json = profile_request.json()
-            username = profile_json.get("login", None)
+            token_json = token_request.json()
+            error = token_json.get("error", None)
 
-            if username is not None:
-                name = profile_json.get("name")
-                email = profile_json.get("email")
-                bio = profile_json.get("bio")
+            if error is not None:
+                raise GithubException()
+            else:
+                access_token = token_json.get("access_token")
+                profile_request = requests.get(
+                    "https://api.github.com/user",
+                    headers={
+                        "Authorization": f"token {access_token}",
+                        "Accept": "application/json",
+                    },
+                )
+                profile_json = profile_request.json()
+                username = profile_json.get("login", None)
 
-                user = models.User.objects.get(email=email)
+                if username is not None:
+                    name = profile_json.get("name")
+                    email = profile_json.get("email")
+                    bio = profile_json.get("bio")
 
-                if user is not None:
-                    return redirect(
-                        reverse("users:login")
-                    )  # 이미 그 email을 가진 user가 있으면 수행
-                else:
-                    user = models.User.objects.create(
-                        username=email, first_name=name, bio=bio, email=email
-                    )
-                    login(request, user)
+                    try:  # user가 존재할 때
+                        user = models.User.objects.get(email=email)
+
+                        if user.login_method == models.User.LOGIN_GITHUB:
+                            # 이미 깃허브 계정으로 user를 생성했을 때
+                            pass
+
+                        else:  # 깃허브로 계정을 생성하지 않은 user가 로그인 시도했을 때
+                            raise GithubException()
+
+                    except models.User.DoesNotExist:  # user가 존재하지 않을 때 (입력한 email을 가진 user를 찾을 수 없을 때)
+                        user = models.User.objects.create(
+                            email=email,
+                            first_name=name,
+                            username=email,
+                            bio=bio,
+                            login_method=models.User.LOGIN_GITHUB,
+                        )  # 새로운 유저 생성
+                        user.set_unusable_password()
+                        user.save()
+
+                    login(request, user)  # 로그인 시킴
 
                     return redirect(reverse("core:home"))
-            else:
-                return redirect(reverse("users:login"))
-    else:
-        return redirect(reverse("core:home"))
+
+                else:  # profile request 안에 username이 없을 때
+                    raise GithubException()
+        else:
+            raise GithubException()
+
+    except GithubException:  # 어떤 일이 일어나면 user를 login으로 돌려보냄
+        # 에러 메세지
+        return redirect(reverse("users:login"))
