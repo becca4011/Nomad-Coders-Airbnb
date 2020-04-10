@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from . import models
 
 
@@ -55,3 +56,14 @@ class SignUpForm(forms.ModelForm):
         user.set_password(password)
 
         user.save()
+
+
+"""
+class SignUpForm(UserCreationForm):
+
+    email = forms.EmailField()
+
+    class Meta:
+        model = models.User
+        fields = ("email",)
+"""

@@ -4,6 +4,7 @@ from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse
 from django.contrib.auth import authenticate, login, logout
+from django.core.files.base import ContentFile
 from . import forms, models
 
 # Create your views here.
@@ -202,7 +203,7 @@ def kakao_callback(request):
 
         profile = kakao_account.get("profile")
         nickname = profile.get("nickname")
-        profile_image = profile.get("profile_image")
+        profile_image = profile.get("profile_image_url")
 
         try:
             user = models.User.objects.get(email=email)
@@ -221,6 +222,12 @@ def kakao_callback(request):
 
             user.set_unusable_password()
             user.save()
+
+            if profile_image is not None:  # 프로필 사진이 있을 때
+                photo_request = requests.get(profile_image)
+                user.avatar.save(
+                    f"{nickname}-avatar.png", ContentFile(photo_request.content)
+                )  # avatar 사진으로 저장
 
         login(request, user)
 
