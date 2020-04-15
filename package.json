@@ -1,0 +1,25 @@
+{
+  "name": "nomad-coders-django",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/becca4011/Nomad-Coders-Django.git"
+  },
+  "scripts": {
+    "css": "gulp"
+  },
+  "homepage": "https://github.com/becca4011/Nomad-Coders-Django#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.7.6",
+    "tailwindcss": "^1.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/becca4011/Nomad-Coders-Django/issues"
+  },
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^8.0.0",
+    "gulp-csso": "^4.0.1",
+    "gulp-sass": "^4.0.2"
+  }
+}

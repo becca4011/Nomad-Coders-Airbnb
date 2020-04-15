@@ -136,3 +136,5 @@ dmypy.json
 
 #사진 업로드 방지
 uplodas/
+
+node_modules/
