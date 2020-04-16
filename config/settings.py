@@ -125,7 +125,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/static/"  # 서버 url
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # /static/에 가면 접근할 수 있는 파일
 
 AUTH_USER_MODEL = "users.User"  # models에 avatar, gender, bio 등을 추가해서 user model을 바꿈
 
