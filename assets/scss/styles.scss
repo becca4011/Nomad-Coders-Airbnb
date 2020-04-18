@@ -1,10 +1,23 @@
-/* styles.scss 파일을 변경하면 npm run css를 실행해야 함 */
-
 @tailwind base;
 @tailwind components;
 
+/* styles.scss 파일을 변경하면 npm run css를 실행해야 함 */
+/* 맨 위에 주석 달면 적용 X */
+
 .search-box {
     transition: box-shadow 0.2s linear;
+}
+
+.nav_link {
+    @apply ml-8 border-b-2 border-white h-full flex items-center;
+
+    a {
+        @apply py-10 px-5;
+    }
+
+    &:hover {
+        @apply border-gray-600;
+    }
 }
 
 @tailwind utilities;
